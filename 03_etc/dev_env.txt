@@ -1,0 +1,7 @@
+PS G:\내 드라이브\20260415 코디세이 AI 네이티브 과정\02_mission\N2_A1-1_Python> python --version
+Python 3.12.10
+
+PS G:\내 드라이브\20260415 코디세이 AI 네이티브 과정\02_mission\N2_A1-1_Python> git --version
+git version 2.53.0.windows.1
+
+PS G:\내 드라이브\20260415 코디세이 AI 네이티브 과정\02_mission\N2_A1-1_Python> 

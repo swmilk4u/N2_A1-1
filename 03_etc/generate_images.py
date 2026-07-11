@@ -94,3 +94,12 @@ if GIT_LOG_FILE.exists():
     render_image(["Git Commit Log"] + ["" ] + git_lines, IMAGES_DIR / "git_log.png")
 else:
     print("git_log.txt not found, skipping git_log.png")
+
+# Dev env image if exists
+DEV_ENV_FILE = ROOT / "dev_env.txt"
+if DEV_ENV_FILE.exists():
+    with DEV_ENV_FILE.open("r", encoding="utf-8") as f:
+        dev_lines = [line.rstrip() for line in f.readlines()]
+    render_image(dev_lines, IMAGES_DIR / "dev_env.png")
+else:
+    print("dev_env.txt not found, skipping dev_env.png")

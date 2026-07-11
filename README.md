@@ -12,7 +12,7 @@
 * **인코딩**: UTF-8
 
 ### 개발 환경 확인 및 실행 준비 완료
-![개발 환경 확인](02_source/images/demo_session.png)
+![개발 환경 확인](02_source/images/dev_env.png)
 
 ---
 
