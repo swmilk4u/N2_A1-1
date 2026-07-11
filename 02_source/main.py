@@ -44,7 +44,7 @@ def load_data():
     global prompts
     if os.path.exists(DB_FILE):
         try:
-            with open(DB_FILE, "r", encoding="utf-8") as f:
+            with open(DB_FILE, "r", encoding="utf-8-sig") as f:
                 prompts = json.load(f)
             return
         except Exception as e:
@@ -138,7 +138,7 @@ def show_list():
         return
         
     for idx, p in enumerate(prompts, 1):
-        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        fav_mark = " [*]" if p.get("favorite", False) else ""
         print(f"{idx}. [{p['category']}] {p['title']}{fav_mark}")
         
     print(f"\n총 {len(prompts)}개의 프롬프트")
@@ -167,7 +167,7 @@ def show_by_category():
         return
         
     for idx, p in enumerate(filtered, 1):
-        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        fav_mark = " [*]" if p.get("favorite", False) else ""
         print(f"{idx}. {p['title']}{fav_mark}")
         
     print(f"\n총 {len(filtered)}개의 프롬프트")
@@ -188,7 +188,7 @@ def search_prompt():
         return
         
     for idx, p in enumerate(filtered, 1):
-        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        fav_mark = " [*]" if p.get("favorite", False) else ""
         print(f"{idx}. [{p['category']}] {p['title']}{fav_mark}")
         
     print(f"\n총 {len(filtered)}개의 프롬프트를 찾았습니다.")
@@ -213,7 +213,7 @@ def show_detail():
                 target["views"] = target.get("views", 0) + 1  # 조회수 증가
                 save_data()  # 조회수 영속화
                 
-                fav_str = "⭐" if target.get("favorite", False) else "일반"
+                fav_str = "[*]" if target.get("favorite", False) else "일반"
                 print("\n" + "─" * 40)
                 print(f"제목: {target['title']}")
                 print(f"카테고리: {target['category']}")
@@ -259,7 +259,7 @@ def show_favorites():
         return
         
     for idx, p in enumerate(filtered, 1):
-        print(f"{idx}. [{p['category']}] {p['title']} ⭐")
+        print(f"{idx}. [{p['category']}] {p['title']} [*]")
         
     print(f"\n총 {len(filtered)}개의 즐겨찾기")
 
@@ -355,7 +355,7 @@ def show_top_prompts():
     top_n = sorted_prompts[:3]
     
     for idx, p in enumerate(top_n, 1):
-        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        fav_mark = " [*]" if p.get("favorite", False) else ""
         print(f"{idx}위. [{p['category']}] {p['title']}{fav_mark} (조회수: {p.get('views', 0)}회)")
 
 # 13. 메인 실행 함수

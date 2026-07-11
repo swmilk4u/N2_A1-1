@@ -1,0 +1,14 @@
+﻿* be94f7c feat: ?꾨＼?꾪듃 ?섏젙/??젣 諛?議고쉶??湲곕컲 Top3 ?멸린 ?뺣젹 援ы쁽 (蹂대꼫??2)
+* 172d37e feat: JSON ?뚯씪 湲곕컲 ?꾨＼?꾪듃 ?곸냽??湲곕뒫 援ы쁽 (蹂대꼫??1)
+* a122431 feat: 利먭꺼李얘린 異붽?/?댁젣 諛?利먭꺼李얘린 紐⑸줉 蹂닿린 湲곕뒫 援ы쁽
+* 3f23139 feat: ?꾨＼?꾪듃 ?곸꽭 議고쉶 湲곕뒫 援ы쁽 (議고쉶??利앷? ?ы븿)
+* 11a4323 feat: ?꾨＼?꾪듃 寃??湲곕뒫 援ы쁽
+* f965459 feat: 移댄뀒怨좊━蹂?議고쉶 湲곕뒫 援ы쁽
+*   0946a77 merge: Merge branch 'feature/list' into main
+|\  
+| * 1cc7c5c chore: restore untracked config files
+| * 09edf7b feat: ?꾨＼?꾪듃 紐⑸줉 異쒕젰 諛?利먭꺼李얘린 ?곹깭 ?쒖떆 援ы쁽
+|/  
+* e6d2b44 feat: ?꾨＼?꾪듃 異붽? 湲곕뒫 援ы쁽 (?낅젰 寃利??ы븿)
+* fbfab00 feat: 硫붿씤 硫붾돱 UI 諛?湲곕낯 ?꾨＼?꾪듃 ?곗씠???묒옱
+* 2a2ecd2 Initial commit with .gitignore and empty README
