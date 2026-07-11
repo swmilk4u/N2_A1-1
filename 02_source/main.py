@@ -193,7 +193,44 @@ def show_detail():
                 return
         print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
 
-# 8. 메인 실행 함수
+# 8. 즐겨찾기 관리 함수
+def manage_favorites():
+    print("\n=== 즐겨찾기 관리 ===")
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+        
+    show_list()
+    
+    while True:
+        num_input = input("즐겨찾기를 추가/해제할 프롬프트 번호 입력 (이전 메뉴: 0): ").strip()
+        if num_input == "0":
+            return
+        if num_input.isdigit():
+            idx = int(num_input) - 1
+            if 0 <= idx < len(prompts):
+                target = prompts[idx]
+                # 즐겨찾기 상태 토글
+                target["favorite"] = not target.get("favorite", False)
+                status = "추가" if target["favorite"] else "해제"
+                print(f"'{target['title']}' 프롬프트를 즐겨찾기에 {status}했습니다!")
+                return
+        print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
+
+# 9. 즐겨찾기 목록 출력 함수
+def show_favorites():
+    print("\n=== 즐겨찾기 목록 ===")
+    filtered = [p for p in prompts if p.get("favorite", False)]
+    if not filtered:
+        print("즐겨찾기된 프롬프트가 없습니다.")
+        return
+        
+    for idx, p in enumerate(filtered, 1):
+        print(f"{idx}. [{p['category']}] {p['title']} ⭐")
+        
+    print(f"\n총 {len(filtered)}개의 즐겨찾기")
+
+# 10. 메인 실행 함수
 def main():
     while True:
         show_menu()
@@ -217,9 +254,9 @@ def main():
         elif choice == "5":
             show_detail()
         elif choice == "6":
-            print("\n[안내] 즐겨찾기 관리 기능은 준비 중입니다.")
+            manage_favorites()
         elif choice == "7":
-            print("\n[안내] 즐겨찾기 목록 기능은 준비 중입니다.")
+            show_favorites()
         else:
             print("잘못된 입력입니다. 0~7 사이의 숫자를 입력해주세요.")
 
