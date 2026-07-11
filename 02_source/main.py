@@ -28,6 +28,8 @@ prompts = [
     }
 ]
 
+CATEGORIES = ["텍스트 생성", "이미지 생성", "영상 생성", "페르소나", "자동화", "기타"]
+
 # 2. 메뉴 표시 함수
 def show_menu():
     print("\n=== 나만의 프롬프트 관리 ===")
@@ -39,8 +41,59 @@ def show_menu():
     print("6. 즐겨찾기 관리")
     print("7. 즐겨찾기 목록")
     print("0. 종료")
+
+# 3. 프롬프트 추가 함수
+def add_prompt():
+    print("\n=== 프롬프트 추가 ===")
     
-# 3. 메인 실행 함수
+    # 제목 입력 (비어있으면 재요청)
+    while True:
+        title = input("제목: ").strip()
+        if title:
+            break
+        print("제목을 입력해주세요. (공백 불가)")
+        
+    # 내용 입력 (비어있으면 재요청)
+    while True:
+        content = input("내용: ").strip()
+        if content:
+            break
+        print("내용을 입력해주세요. (공백 불가)")
+        
+    # 카테고리 선택
+    print("\n카테고리 선택:")
+    for idx, category in enumerate(CATEGORIES, 1):
+        print(f"{idx}) {category}")
+    print("7) 직접 입력")
+    
+    while True:
+        cat_choice = input("선택: ").strip()
+        if cat_choice.isdigit():
+            cat_num = int(cat_choice)
+            if 1 <= cat_num <= len(CATEGORIES):
+                category = CATEGORIES[cat_num - 1]
+                break
+            elif cat_num == 7:
+                while True:
+                    custom_cat = input("직접 입력할 카테고리명: ").strip()
+                    if custom_cat:
+                        category = custom_cat
+                        break
+                    print("카테고리명을 입력해주세요.")
+                break
+        print("잘못된 선택입니다. 1~7 사이의 숫자를 입력해주세요.")
+        
+    # 프롬프트 추가
+    new_prompt = {
+        "title": title,
+        "content": content,
+        "category": category,
+        "favorite": False
+    }
+    prompts.append(new_prompt)
+    print(f"\n프롬프트가 추가되었습니다!")
+
+# 4. 메인 실행 함수
 def main():
     while True:
         show_menu()
@@ -54,7 +107,7 @@ def main():
             print("프로그램을 종료합니다. 이용해 주셔서 감사합니다.")
             break
         elif choice == "1":
-            print("\n[안내] 프롬프트 추가 기능은 준비 중입니다.")
+            add_prompt()
         elif choice == "2":
             print("\n[안내] 프롬프트 목록 기능은 준비 중입니다.")
         elif choice == "3":
