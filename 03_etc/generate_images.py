@@ -64,26 +64,36 @@ def render_image(lines, output_path):
 with SESSION_FILE.open("r", encoding="utf-8") as f:
     session_lines = [line.rstrip() for line in f.readlines()]
 
+def find_marker_index(lines, marker, occurrence=1):
+    count = 0
+    for i, line in enumerate(lines):
+        if line.strip() == marker:
+            count += 1
+            if count == occurrence:
+                return i
+    raise ValueError(f"Marker '{marker}' (occurrence {occurrence}) not found")
+
 sections = [
-    ("menu.png", "=== 나만의 프롬프트 관리 ===", "=== 프롬프트 추가 ==="),
-    ("invalid_input.png", "=== 나만의 프롬프트 관리 ===", "=== 나만의 프롬프트 관리 ===", 0),
-    ("add_prompt.png", "=== 프롬프트 추가 ===", "=== 프롬프트 목록 ==="),
-    ("list.png", "=== 프롬프트 목록 ===", "=== 나만의 프롬프트 관리 ===", 2),
-    ("search.png", "=== 프롬프트 검색 ===", "=== 나만의 프롬프트 관리 ===", 2),
-    ("detail.png", "=== 프롬프트 상세 보기 ===", "=== 나만의 프롬프트 관리 ===", 2),
-    ("favorite.png", "=== 즐겨찾기 목록 ===", "=== 나만의 프롬프트 관리 ===", 2),
-    ("top3.png", "=== 인기 프롬프트 Top 3 ===", "=== 나만의 프롬프트 관리 ===", 1),
+    ("menu.png", "=== 나만의 프롬프트 관리 ===", 2, "=== 프롬프트 추가 ===", 1, 0),
+    ("invalid_input.png", "=== 나만의 프롬프트 관리 ===", 1, "=== 나만의 프롬프트 관리 ===", 2, 0),
+    ("add_prompt.png", "=== 프롬프트 추가 ===", 1, "=== 나만의 프롬프트 관리 ===", 3, 0),
+    ("list.png", "=== 프롬프트 목록 ===", 1, "=== 나만의 프롬프트 관리 ===", 4, 2),
+    ("search.png", "=== 프롬프트 검색 ===", 1, "=== 나만의 프롬프트 관리 ===", 5, 2),
+    ("detail.png", "=== 프롬프트 상세 보기 ===", 1, "=== 나만의 프롬프트 관리 ===", 6, 2),
+    ("favorite.png", "=== 즐겨찾기 목록 ===", 1, "=== 나만의 프롬프트 관리 ===", 8, 2),
+    ("top3.png", "=== 인기 프롬프트 Top 3 ===", 1, "=== 나만의 프롬프트 관리 ===", 9, 1),
 ]
 
-for filename, start_marker, end_marker, skip in [(s[0], s[1], s[2], s[3] if len(s) > 3 else 0) for s in sections]:
+for item in sections:
+    filename, start_marker, start_occ, end_marker, end_occ, skip = item
     try:
-        start = next(i for i, line in enumerate(session_lines) if line.strip() == start_marker)
-    except StopIteration:
-        print(f"Marker not found: {start_marker}")
+        start = find_marker_index(session_lines, start_marker, start_occ)
+    except ValueError as e:
+        print(e)
         continue
     try:
-        end = next(i for i, line in enumerate(session_lines[start + 1 :], start + 1) if line.strip() == end_marker)
-    except StopIteration:
+        end = find_marker_index(session_lines, end_marker, end_occ)
+    except ValueError as e:
         end = len(session_lines)
     selected = session_lines[start + skip : end]
     render_image(selected, IMAGES_DIR / filename)
