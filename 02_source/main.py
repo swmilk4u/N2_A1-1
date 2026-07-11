@@ -1,4 +1,4 @@
-# 02_source/main.py
+# -*- coding: utf-8 -*-
 import json
 import os
 

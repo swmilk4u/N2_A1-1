@@ -5,7 +5,7 @@ import textwrap
 ROOT = Path(__file__).resolve().parent
 SESSION_FILE = ROOT / "demo_session.txt"
 GIT_LOG_FILE = ROOT / "git_log.txt"
-IMAGES_DIR = ROOT / "images"
+IMAGES_DIR = ROOT.parent / "02_source" / "images"
 IMAGES_DIR.mkdir(exist_ok=True)
 
 # Try Windows Korean font first, fallback to default font.

@@ -1,0 +1,15 @@
+* 544badd 한글 작업 결과 반영
+* be94f7c feat: 프롬프트 수정/삭제 및 조회수 기반 Top3 인기 정렬 구현 (보너스 2)
+* 172d37e feat: JSON 파일 기반 프롬프트 영속화 기능 구현 (보너스 1)
+* a122431 feat: 즐겨찾기 추가/해제 및 즐겨찾기 목록 보기 기능 구현
+* 3f23139 feat: 프롬프트 상세 조회 기능 구현 (조회수 증가 포함)
+* 11a4323 feat: 프롬프트 검색 기능 구현
+* f965459 feat: 카테고리별 조회 기능 구현
+*   0946a77 merge: Merge branch 'feature/list' into main
+|\  
+| * 1cc7c5c chore: restore untracked config files
+| * 09edf7b feat: 프롬프트 목록 출력 및 즐겨찾기 상태 표시 구현
+|/  
+* e6d2b44 feat: 프롬프트 추가 기능 구현 (입력 검증 포함)
+* fbfab00 feat: 메인 메뉴 UI 및 기본 프롬프트 데이터 탑재
+* 2a2ecd2 Initial commit with .gitignore and empty README
