@@ -71,7 +71,7 @@ sections = [
     ("search.png", "=== 프롬프트 검색 ===", "=== 나만의 프롬프트 관리 ===", 2),
     ("detail.png", "=== 프롬프트 상세 보기 ===", "=== 나만의 프롬프트 관리 ===", 2),
     ("favorite.png", "=== 즐겨찾기 목록 ===", "=== 나만의 프롬프트 관리 ===", 2),
-    ("top3.png", "=== 인기 프롬프트 Top 3 ===", "=== 나만의 프롬프트 관리 ===", 2),
+    ("top3.png", "=== 인기 프롬프트 Top 3 ===", "=== 나만의 프롬프트 관리 ===", 1),
 ]
 
 for filename, start_marker, end_marker, skip in [(s[0], s[1], s[2], s[3] if len(s) > 3 else 0) for s in sections]:
