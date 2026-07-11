@@ -25,7 +25,7 @@ for fp in font_paths:
 if font is None:
     font = ImageFont.load_default()
 
-LINE_WIDTH = 100
+LINE_WIDTH = 60
 IMAGE_WIDTH = 1200
 PADDING = 16
 
