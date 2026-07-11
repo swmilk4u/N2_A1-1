@@ -106,7 +106,36 @@ def show_list():
         
     print(f"\n총 {len(prompts)}개의 프롬프트")
 
-# 5. 메인 실행 함수
+# 5. 카테고리별 조회 함수
+def show_by_category():
+    print("\n=== 카테고리별 조회 ===")
+    print("조회할 카테고리를 선택하세요:")
+    for idx, category in enumerate(CATEGORIES, 1):
+        print(f"{idx}) {category}")
+        
+    while True:
+        cat_choice = input("선택: ").strip()
+        if cat_choice.isdigit():
+            cat_num = int(cat_choice)
+            if 1 <= cat_num <= len(CATEGORIES):
+                target_cat = CATEGORIES[cat_num - 1]
+                break
+        print(f"잘못된 선택입니다. 1~{len(CATEGORIES)} 사이의 숫자를 입력해주세요.")
+        
+    filtered = [p for p in prompts if p.get("category") == target_cat]
+    
+    print(f"\n[{target_cat}] 카테고리 프롬프트:")
+    if not filtered:
+        print("해당 카테고리에 등록된 프롬프트가 없습니다.")
+        return
+        
+    for idx, p in enumerate(filtered, 1):
+        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        print(f"{idx}. {p['title']}{fav_mark}")
+        
+    print(f"\n총 {len(filtered)}개의 프롬프트")
+
+# 6. 메인 실행 함수
 def main():
     while True:
         show_menu()
@@ -124,7 +153,7 @@ def main():
         elif choice == "2":
             show_list()
         elif choice == "3":
-            print("\n[안내] 카테고리별 조회 기능은 준비 중입니다.")
+            show_by_category()
         elif choice == "4":
             print("\n[안내] 프롬프트 검색 기능은 준비 중입니다.")
         elif choice == "5":
