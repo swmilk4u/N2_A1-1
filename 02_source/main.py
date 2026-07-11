@@ -93,7 +93,20 @@ def add_prompt():
     prompts.append(new_prompt)
     print(f"\n프롬프트가 추가되었습니다!")
 
-# 4. 메인 실행 함수
+# 4. 프롬프트 목록 출력 함수
+def show_list():
+    print("\n=== 프롬프트 목록 ===")
+    if not prompts:
+        print("등록된 프롬프트가 없습니다. 프롬프트를 먼저 추가해주세요.")
+        return
+        
+    for idx, p in enumerate(prompts, 1):
+        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        print(f"{idx}. [{p['category']}] {p['title']}{fav_mark}")
+        
+    print(f"\n총 {len(prompts)}개의 프롬프트")
+
+# 5. 메인 실행 함수
 def main():
     while True:
         show_menu()
@@ -109,7 +122,7 @@ def main():
         elif choice == "1":
             add_prompt()
         elif choice == "2":
-            print("\n[안내] 프롬프트 목록 기능은 준비 중입니다.")
+            show_list()
         elif choice == "3":
             print("\n[안내] 카테고리별 조회 기능은 준비 중입니다.")
         elif choice == "4":
