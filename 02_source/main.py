@@ -1,7 +1,11 @@
 # 02_source/main.py
+import json
+import os
+
+DB_FILE = "02_source/prompts.json"
 
 # 1. 기본 프롬프트 데이터 정의 (최소 3개 이상)
-prompts = [
+default_prompts = [
     {
         "title": "블로그 글 작성 도우미",
         "content": "당신은 10년 경력의 전문 블로거입니다. 주어진 주제에 대해 SEO에 최적화된 블로그 글을 작성해주세요. 서론, 본론, 결론 구조를 갖추고, 독자의 관심을 끄는 제목을 3개 제안해주세요.",
@@ -32,9 +36,34 @@ prompts = [
     }
 ]
 
+prompts = []
 CATEGORIES = ["텍스트 생성", "이미지 생성", "영상 생성", "페르소나", "자동화", "기타"]
 
-# 2. 메뉴 표시 함수
+# 2. JSON 데이터 영속화 함수
+def load_data():
+    global prompts
+    if os.path.exists(DB_FILE):
+        try:
+            with open(DB_FILE, "r", encoding="utf-8") as f:
+                prompts = json.load(f)
+            return
+        except Exception as e:
+            print(f"[안내] 데이터 로드 오류 ({e}), 기본 데이터를 사용합니다.")
+    
+    prompts = [dict(p) for p in default_prompts]
+    save_data()
+
+def save_data():
+    try:
+        dir_name = os.path.dirname(DB_FILE)
+        if dir_name and not os.path.exists(dir_name):
+            os.makedirs(dir_name, exist_ok=True)
+        with open(DB_FILE, "w", encoding="utf-8") as f:
+            json.dump(prompts, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"[오류] 데이터 저장에 실패했습니다: {e}")
+
+# 3. 메뉴 표시 함수
 def show_menu():
     print("\n=== 나만의 프롬프트 관리 ===")
     print("1. 프롬프트 추가")
@@ -44,9 +73,11 @@ def show_menu():
     print("5. 프롬프트 상세 보기")
     print("6. 즐겨찾기 관리")
     print("7. 즐겨찾기 목록")
+    print("8. 프롬프트 수정/삭제 (CRUD)")
+    print("9. 인기 프롬프트 Top 3")
     print("0. 종료")
 
-# 3. 프롬프트 추가 함수
+# 4. 프롬프트 추가 함수
 def add_prompt():
     print("\n=== 프롬프트 추가 ===")
     
@@ -96,9 +127,10 @@ def add_prompt():
         "views": 0
     }
     prompts.append(new_prompt)
+    save_data()  # 영속화
     print(f"\n프롬프트가 추가되었습니다!")
 
-# 4. 프롬프트 목록 출력 함수
+# 5. 프롬프트 목록 출력 함수
 def show_list():
     print("\n=== 프롬프트 목록 ===")
     if not prompts:
@@ -111,7 +143,7 @@ def show_list():
         
     print(f"\n총 {len(prompts)}개의 프롬프트")
 
-# 5. 카테고리별 조회 함수
+# 6. 카테고리별 조회 함수
 def show_by_category():
     print("\n=== 카테고리별 조회 ===")
     print("조회할 카테고리를 선택하세요:")
@@ -140,7 +172,7 @@ def show_by_category():
         
     print(f"\n총 {len(filtered)}개의 프롬프트")
 
-# 6. 프롬프트 검색 함수
+# 7. 프롬프트 검색 함수
 def search_prompt():
     print("\n=== 프롬프트 검색 ===")
     keyword = input("검색어: ").strip()
@@ -161,7 +193,7 @@ def search_prompt():
         
     print(f"\n총 {len(filtered)}개의 프롬프트를 찾았습니다.")
 
-# 7. 프롬프트 상세 보기 함수
+# 8. 프롬프트 상세 보기 함수
 def show_detail():
     print("\n=== 프롬프트 상세 보기 ===")
     if not prompts:
@@ -179,6 +211,7 @@ def show_detail():
             if 0 <= idx < len(prompts):
                 target = prompts[idx]
                 target["views"] = target.get("views", 0) + 1  # 조회수 증가
+                save_data()  # 조회수 영속화
                 
                 fav_str = "⭐" if target.get("favorite", False) else "일반"
                 print("\n" + "─" * 40)
@@ -193,7 +226,7 @@ def show_detail():
                 return
         print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
 
-# 8. 즐겨찾기 관리 함수
+# 9. 즐겨찾기 관리 함수
 def manage_favorites():
     print("\n=== 즐겨찾기 관리 ===")
     if not prompts:
@@ -210,14 +243,14 @@ def manage_favorites():
             idx = int(num_input) - 1
             if 0 <= idx < len(prompts):
                 target = prompts[idx]
-                # 즐겨찾기 상태 토글
                 target["favorite"] = not target.get("favorite", False)
+                save_data()  # 즐겨찾기 상태 저장
                 status = "추가" if target["favorite"] else "해제"
                 print(f"'{target['title']}' 프롬프트를 즐겨찾기에 {status}했습니다!")
                 return
         print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
 
-# 9. 즐겨찾기 목록 출력 함수
+# 10. 즐겨찾기 목록 출력 함수
 def show_favorites():
     print("\n=== 즐겨찾기 목록 ===")
     filtered = [p for p in prompts if p.get("favorite", False)]
@@ -230,8 +263,104 @@ def show_favorites():
         
     print(f"\n총 {len(filtered)}개의 즐겨찾기")
 
-# 10. 메인 실행 함수
+# 11. [보너스] 프롬프트 수정 및 삭제 (CRUD) 함수
+def modify_or_delete_prompt():
+    print("\n=== 프롬프트 수정/삭제 (CRUD) ===")
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+        
+    show_list()
+    
+    while True:
+        num_input = input("수정/삭제할 프롬프트 번호 입력 (이전 메뉴: 0): ").strip()
+        if num_input == "0":
+            return
+        if num_input.isdigit():
+            idx = int(num_input) - 1
+            if 0 <= idx < len(prompts):
+                target = prompts[idx]
+                break
+        print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
+        
+    print(f"\n선택된 프롬프트: '{target['title']}'")
+    print("1. 수정 (Modify)")
+    print("2. 삭제 (Delete)")
+    print("0. 취소")
+    
+    while True:
+        action = input("선택: ").strip()
+        if action == "0":
+            return
+        elif action == "1":
+            print("\n--- 프롬프트 수정 (입력하지 않고 Enter 입력 시 기존 값 유지) ---")
+            new_title = input(f"새 제목 (기존: {target['title']}): ").strip()
+            new_content = input(f"새 내용 (기존: {target['content'][:20]}...): ").strip()
+            
+            print(f"기존 카테고리: {target['category']}")
+            print("새 카테고리 선택 (엔터 입력 시 기존 유지):")
+            for i, cat in enumerate(CATEGORIES, 1):
+                print(f"{i}) {cat}")
+            print("7) 직접 입력")
+            
+            while True:
+                cat_input = input("선택: ").strip()
+                if not cat_input:
+                    new_category = target['category']
+                    break
+                if cat_input.isdigit():
+                    cat_num = int(cat_input)
+                    if 1 <= cat_num <= len(CATEGORIES):
+                        new_category = CATEGORIES[cat_num - 1]
+                        break
+                    elif cat_num == 7:
+                        custom_cat = input("직접 입력할 카테고리명: ").strip()
+                        if custom_cat:
+                            new_category = custom_cat
+                            break
+                        print("카테고리명을 입력해주세요.")
+                        continue
+                print("잘못된 입력입니다. 엔터를 누르거나 1~7 숫자를 입력하세요.")
+                
+            if new_title:
+                target['title'] = new_title
+            if new_content:
+                target['content'] = new_content
+            target['category'] = new_category
+            
+            save_data()
+            print("프롬프트가 수정되었습니다!")
+            return
+            
+        elif action == "2":
+            confirm = input(f"정말로 '{target['title']}' 프롬프트를 삭제하시겠습니까? (y/n): ").strip().lower()
+            if confirm == 'y':
+                prompts.pop(idx)
+                save_data()
+                print("프롬프트가 삭제되었습니다.")
+            else:
+                print("삭제가 취소되었습니다.")
+            return
+        print("잘못된 입력입니다. 0, 1, 2 중에서 선택해주세요.")
+
+# 12. [보너스] 인기 프롬프트 Top 3 조회 함수 (조회수 기준 정렬)
+def show_top_prompts():
+    print("\n=== 인기 프롬프트 Top 3 ===")
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+        
+    # 조회수(views) 기준 내림차순 정렬
+    sorted_prompts = sorted(prompts, key=lambda x: x.get("views", 0), reverse=True)
+    top_n = sorted_prompts[:3]
+    
+    for idx, p in enumerate(top_n, 1):
+        fav_mark = " ⭐" if p.get("favorite", False) else ""
+        print(f"{idx}위. [{p['category']}] {p['title']}{fav_mark} (조회수: {p.get('views', 0)}회)")
+
+# 13. 메인 실행 함수
 def main():
+    load_data()  # 시작 시 데이터 로드
     while True:
         show_menu()
         try:
@@ -257,8 +386,12 @@ def main():
             manage_favorites()
         elif choice == "7":
             show_favorites()
+        elif choice == "8":
+            modify_or_delete_prompt()
+        elif choice == "9":
+            show_top_prompts()
         else:
-            print("잘못된 입력입니다. 0~7 사이의 숫자를 입력해주세요.")
+            print("잘못된 입력입니다. 0~9 사이의 숫자를 입력해주세요.")
 
 if __name__ == "__main__":
     main()
