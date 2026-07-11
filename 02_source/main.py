@@ -6,25 +6,29 @@ prompts = [
         "title": "블로그 글 작성 도우미",
         "content": "당신은 10년 경력의 전문 블로거입니다. 주어진 주제에 대해 SEO에 최적화된 블로그 글을 작성해주세요. 서론, 본론, 결론 구조를 갖추고, 독자의 관심을 끄는 제목을 3개 제안해주세요.",
         "category": "텍스트 생성",
-        "favorite": True
+        "favorite": True,
+        "views": 0
     },
     {
         "title": "제품 썸네일 생성",
         "content": "다음 제품의 매력적인 썸네일 이미지를 생성해주세요. 제품의 핵심 기능이 돋보이고 텍스트는 최소화하며, 밝고 화사한 톤앤매너로 디자인해 주세요.",
         "category": "이미지 생성",
-        "favorite": False
+        "favorite": False,
+        "views": 0
     },
     {
         "title": "IT 컨설턴트 페르소나",
         "content": "당신은 대기업 IT 전략 컨설턴트입니다. 클라이언트의 디지털 전환 전략에 대해 날카롭고 구체적인 조언을 해주세요. 답변은 항상 전문 용어를 적절히 섞어 3가지 단락으로 요약해 주세요.",
         "category": "페르소나",
-        "favorite": False
+        "favorite": False,
+        "views": 0
     },
     {
         "title": "뉴스 요약 프롬프트",
         "content": "아래 제공되는 뉴스 기사의 핵심 내용을 3문장으로 요약하고, 각각의 주요 키워드를 해시태그 형식으로 3개 추출해 주세요.",
         "category": "자동화",
-        "favorite": True
+        "favorite": True,
+        "views": 0
     }
 ]
 
@@ -88,7 +92,8 @@ def add_prompt():
         "title": title,
         "content": content,
         "category": category,
-        "favorite": False
+        "favorite": False,
+        "views": 0
     }
     prompts.append(new_prompt)
     print(f"\n프롬프트가 추가되었습니다!")
@@ -156,7 +161,39 @@ def search_prompt():
         
     print(f"\n총 {len(filtered)}개의 프롬프트를 찾았습니다.")
 
-# 7. 메인 실행 함수
+# 7. 프롬프트 상세 보기 함수
+def show_detail():
+    print("\n=== 프롬프트 상세 보기 ===")
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+        
+    show_list()
+    
+    while True:
+        num_input = input("조회할 프롬프트 번호 입력 (이전 메뉴: 0): ").strip()
+        if num_input == "0":
+            return
+        if num_input.isdigit():
+            idx = int(num_input) - 1
+            if 0 <= idx < len(prompts):
+                target = prompts[idx]
+                target["views"] = target.get("views", 0) + 1  # 조회수 증가
+                
+                fav_str = "⭐" if target.get("favorite", False) else "일반"
+                print("\n" + "─" * 40)
+                print(f"제목: {target['title']}")
+                print(f"카테고리: {target['category']}")
+                print(f"즐겨찾기: {fav_str}")
+                print(f"조회수: {target.get('views', 0)}회")
+                print("─" * 40)
+                print("내용:")
+                print(target['content'])
+                print("─" * 40)
+                return
+        print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
+
+# 8. 메인 실행 함수
 def main():
     while True:
         show_menu()
@@ -178,7 +215,7 @@ def main():
         elif choice == "4":
             search_prompt()
         elif choice == "5":
-            print("\n[안내] 프롬프트 상세 보기 기능은 준비 중입니다.")
+            show_detail()
         elif choice == "6":
             print("\n[안내] 즐겨찾기 관리 기능은 준비 중입니다.")
         elif choice == "7":
