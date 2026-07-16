@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-import os
+from pathlib import Path
 
-DB_FILE = "02_source/prompts.json"
+BASE_DIR = Path(__file__).resolve().parent
+DB_FILE = BASE_DIR / "prompts.json"
 
 # 1. 기본 프롬프트 데이터 정의 (최소 3개 이상)
 default_prompts = [
@@ -42,9 +43,9 @@ CATEGORIES = ["텍스트 생성", "이미지 생성", "영상 생성", "페르�
 # 2. JSON 데이터 영속화 함수
 def load_data():
     global prompts
-    if os.path.exists(DB_FILE):
+    if DB_FILE.exists():
         try:
-            with open(DB_FILE, "r", encoding="utf-8-sig") as f:
+            with DB_FILE.open("r", encoding="utf-8-sig") as f:
                 prompts = json.load(f)
             return
         except Exception as e:
@@ -55,10 +56,8 @@ def load_data():
 
 def save_data():
     try:
-        dir_name = os.path.dirname(DB_FILE)
-        if dir_name and not os.path.exists(dir_name):
-            os.makedirs(dir_name, exist_ok=True)
-        with open(DB_FILE, "w", encoding="utf-8") as f:
+        DB_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with DB_FILE.open("w", encoding="utf-8") as f:
             json.dump(prompts, f, ensure_ascii=False, indent=4)
     except Exception as e:
         print(f"[오류] 데이터 저장에 실패했습니다: {e}")
