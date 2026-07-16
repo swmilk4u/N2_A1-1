@@ -6,6 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent
 DB_FILE = BASE_DIR / "prompts.json"
 
 # 1. 기본 프롬프트 데이터 정의 (최소 3개 이상)
+# 프로그램 실행 시 처음부터 보여줄 기본 프롬프트 예시 데이터이다.
+# 최소 3개 이상 등록되어 있으며, 각 프롬프트는 제목, 내용, 카테고리, 즐겨찾기 여부, 조회수 정보를 포함한다.
+# 이 데이터는 prompts.json이 없을 때 사용되며, 앱 실행 초기 화면을 구성하는 기준 데이터 역할을 한다.
 default_prompts = [
     {
         "title": "블로그 글 작성 도우미",
@@ -41,6 +44,8 @@ prompts = []
 CATEGORIES = ["텍스트 생성", "이미지 생성", "영상 생성", "페르소나", "자동화", "기타"]
 
 # 2. JSON 데이터 영속화 함수
+# 기존 저장된 프롬프트 데이터를 로드한다.
+# 만약 prompts.json이 존재하면 읽어오고, 없으면 기본 데이터로 초기화한다.
 def load_data():
     global prompts
     if DB_FILE.exists():
@@ -54,6 +59,8 @@ def load_data():
     prompts = [dict(p) for p in default_prompts]
     save_data()
 
+# 현재 메모리의 prompts 리스트를 JSON 파일로 저장한다.
+# 루트 폴더의 prompts.json에 쓰며, 디렉터리가 없으면 자동으로 생성한다.
 def save_data():
     try:
         DB_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -63,6 +70,7 @@ def save_data():
         print(f"[오류] 데이터 저장에 실패했습니다: {e}")
 
 # 3. 메뉴 표시 함수
+# 프로그램 실행 시 사용자에게 선택 가능한 메인 메뉴를 출력한다.
 def show_menu():
     print("\n=== 나만의 프롬프트 관리 ===")
     print("1. 프롬프트 추가")
@@ -77,6 +85,8 @@ def show_menu():
     print("0. 종료")
 
 # 4. 프롬프트 추가 함수
+# 제목, 내용, 카테고리를 입력받아 새로운 프롬프트를 리스트에 추가한다.
+# 입력값이 비어 있으면 다시 입력받고, 카테고리는 미리 정해진 목록 또는 직접 입력이 가능하다.
 def add_prompt():
     print("\n=== 프롬프트 추가 ===")
     
@@ -130,6 +140,8 @@ def add_prompt():
     print(f"\n프롬프트가 추가되었습니다!")
 
 # 5. 프롬프트 목록 출력 함수
+# 현재 저장된 모든 프롬프트를 번호와 함께 보여준다.
+# 즐겨찾기 항목은 [*] 표시로 구분한다.
 def show_list():
     print("\n=== 프롬프트 목록 ===")
     if not prompts:
@@ -143,6 +155,7 @@ def show_list():
     print(f"\n총 {len(prompts)}개의 프롬프트")
 
 # 6. 카테고리별 조회 함수
+# 사용자가 선택한 카테고리에 해당하는 프롬프트만 필터링하여 보여준다.
 def show_by_category():
     print("\n=== 카테고리별 조회 ===")
     print("조회할 카테고리를 선택하세요:")
@@ -172,6 +185,7 @@ def show_by_category():
     print(f"\n총 {len(filtered)}개의 프롬프트")
 
 # 7. 프롬프트 검색 함수
+# 제목 또는 내용에 입력한 키워드가 포함된 프롬프트를 검색해 결과를 출력한다.
 def search_prompt():
     print("\n=== 프롬프트 검색 ===")
     keyword = input("검색어: ").strip()
@@ -193,6 +207,8 @@ def search_prompt():
     print(f"\n총 {len(filtered)}개의 프롬프트를 찾았습니다.")
 
 # 8. 프롬프트 상세 보기 함수
+# 사용자가 선택한 프롬프트의 제목, 카테고리, 즐겨찾기 여부, 조회수, 내용을 상세하게 출력한다.
+# 상세 보기를 할 때마다 조회수 views를 1씩 증가시킨다.
 def show_detail():
     print("\n=== 프롬프트 상세 보기 ===")
     if not prompts:
@@ -226,6 +242,7 @@ def show_detail():
         print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
 
 # 9. 즐겨찾기 관리 함수
+# 사용자가 선택한 프롬프트의 즐겨찾기 상태를 추가/해제 토글한다.
 def manage_favorites():
     print("\n=== 즐겨찾기 관리 ===")
     if not prompts:
@@ -250,6 +267,7 @@ def manage_favorites():
         print(f"잘못된 번호입니다. 1~{len(prompts)} 사이의 숫자를 입력해주세요.")
 
 # 10. 즐겨찾기 목록 출력 함수
+# 즐겨찾기 상태로 표시된 프롬프트만 따로 모아 출력한다.
 def show_favorites():
     print("\n=== 즐겨찾기 목록 ===")
     filtered = [p for p in prompts if p.get("favorite", False)]
@@ -263,6 +281,8 @@ def show_favorites():
     print(f"\n총 {len(filtered)}개의 즐겨찾기")
 
 # 11. [보너스] 프롬프트 수정 및 삭제 (CRUD) 함수
+# 기존 프롬프트를 수정하거나 삭제할 수 있다.
+# 수정 시 제목, 내용, 카테고리를 변경할 수 있고, 삭제 시 y/n 확인을 거친다.
 def modify_or_delete_prompt():
     print("\n=== 프롬프트 수정/삭제 (CRUD) ===")
     if not prompts:
@@ -343,6 +363,7 @@ def modify_or_delete_prompt():
         print("잘못된 입력입니다. 0, 1, 2 중에서 선택해주세요.")
 
 # 12. [보너스] 인기 프롬프트 Top 3 조회 함수 (조회수 기준 정렬)
+# 조회수 views가 높은 순으로 상위 3개 프롬프트를 출력한다.
 def show_top_prompts():
     print("\n=== 인기 프롬프트 Top 3 ===")
     if not prompts:
@@ -358,6 +379,8 @@ def show_top_prompts():
         print(f"{idx}위. [{p['category']}] {p['title']}{fav_mark} (조회수: {p.get('views', 0)}회)")
 
 # 13. 메인 실행 함수
+# 프로그램의 전체 흐름을 제어한다.
+# 메뉴 선택에 따라 각 기능 함수들을 호출하고, 종료를 선택하면 루프를 빠져나간다.
 def main():
     load_data()  # 시작 시 데이터 로드
     while True:
